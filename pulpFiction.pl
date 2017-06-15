@@ -62,3 +62,19 @@ encargo(bernardo, winston, buscar(jules, lugano)).
 amigo(vincent, jules).
 amigo(jules, jimmie).
 amigo(vincent, elVendedor).
+
+%esPeligroso/1. Nos dice si un personaje es peligroso. Eso ocurre cuando:
+%realiza alguna actividad peligrosa: ser matón, o robar licorerías. 
+%tiene un jefe peligroso
+
+esPeligroso(Personaje):-
+	haceActividadPeligrosa(Personaje).
+esPeligroso(Personaje):-
+	trabajaPara(Jefe,Personaje),
+	esPeligroso(Jefe).
+
+haceActividadPeligrosa(Personaje):-
+	personaje(Personaje,mafioso(maton)).
+haceActividadPeligrosa(Personaje):-
+	personaje(Personaje,ladron(ListaRobos)),
+	member(licorerias,ListaRobos).
