@@ -25,3 +25,11 @@ esFiel(Persona):-
 	findall(OtraPersona,saleCon(Persona,OtraPersona),ListaDeParejas),
 	length(ListaDeParejas,CantidadParejas),
 	CantidadParejas=1.
+
+%acataOrden/2 Alguien acata la orden de otra persona si trabaja para esa persona directa o indirectamente
+acataOrden(Superior,Empleado):-
+	trabajaPara(Superior,Empleado).
+acataOrden(Superior,Empleado):-
+	trabajaPara(Empleador,Empleado),
+	acataOrden(Superior,Empleador).
+	
