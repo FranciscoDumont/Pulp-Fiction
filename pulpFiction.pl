@@ -13,10 +13,15 @@ trabajaPara(Empleador,bernardo):-
 trabajaPara(Empleador,george):-
 	saleCon(bernardo,Empleador).
 
-%saleCon/2: relaciona dos personas que están saliendo porque son pareja, independientemente de cómo esté definido en el predicado pareja/2.
+% saleCon/2: relaciona dos personas que están saliendo porque son pareja, independientemente de cómo esté definido en el predicado pareja/2.
 saleCon(Persona,OtraPersona):-
 	pareja(Persona,OtraPersona).
 saleCon(Persona,OtraPersona):-
 	pareja(OtraPersona,Persona).
 
- 
+% ​esFiel/1 Una persona es fiel cuando sale con una única persona.
+esFiel(Persona):-
+	pareja(Persona,_),
+	findall(OtraPersona,saleCon(Persona,OtraPersona),ListaDeParejas),
+	length(ListaDeParejas,CantidadParejas),
+	CantidadParejas=1.
