@@ -78,3 +78,25 @@ haceActividadPeligrosa(Personaje):-
 haceActividadPeligrosa(Personaje):-
 	personaje(Personaje,ladron(ListaRobos)),
 	member(licorerias,ListaRobos).
+
+/*sanCayetano/1 Se considera "San Cayetano" a​ ​ quien a todos los que tiene cerca les da algún encargo (y tiene al menos a alguien cerca)
+Alguien tiene cerca a otro personaje si son amigos o uno trabaja para el otro*/
+
+sonAmigos(Persona,OtraPersona):-
+	amigo(Persona,OtraPersona).
+sonAmigos(Persona,OtraPersona):-
+	amigo(OtraPersona,Persona).
+
+trabajanJuntos(Persona,OtraPersona):-
+	trabajaPara(Persona,OtraPersona).
+trabajanJuntos(Persona,OtraPersona):-
+	trabajaPara(OtraPersona,Persona).
+
+estanCerca(Persona,OtraPersona):-
+	sonAmigos(Persona,OtraPersona).
+estanCerca(Persona,OtraPersona):-
+	trabajanJuntos(Persona,OtraPersona).
+
+sanCayetano(Personaje):-
+	estanCerca(Personaje,_),
+	forall(estanCerca(Personaje,Alguien),encargo(Personaje,Alguien,_)).
