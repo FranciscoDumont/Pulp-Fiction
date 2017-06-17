@@ -19,7 +19,7 @@ saleCon(Persona,OtraPersona):-
 saleCon(Persona,OtraPersona):-
 	pareja(OtraPersona,Persona).
 
-% ​esFiel/1 Una persona es fiel cuando sale con una única persona.
+% esFiel/1 Una persona es fiel cuando sale con una única persona.
 esFiel(Persona):-
 	pareja(Persona,_),
 	findall(OtraPersona,saleCon(Persona,OtraPersona),ListaDeParejas),
@@ -32,6 +32,8 @@ acataOrden(Superior,Empleado):-
 acataOrden(Superior,Empleado):-
 	trabajaPara(Empleador,Empleado),
 	acataOrden(Superior,Empleador).
+
+%Entrega 2
 
 % personaje(Nombre, Ocupacion)
 personaje(pumkin,     ladron([estacionesDeServicio, licorerias])).
@@ -63,10 +65,7 @@ amigo(vincent, jules).
 amigo(jules, jimmie).
 amigo(vincent, elVendedor).
 
-%esPeligroso/1. Nos dice si un personaje es peligroso. Eso ocurre cuando:
-%realiza alguna actividad peligrosa: ser matón, o robar licorerías. 
-%tiene un jefe peligroso
-
+%1) Personajes peligrosos
 esPeligroso(Personaje):-
 	haceActividadPeligrosa(Personaje).
 esPeligroso(Personaje):-
@@ -79,9 +78,7 @@ haceActividadPeligrosa(Personaje):-
 	personaje(Personaje,ladron(ListaRobos)),
 	member(licorerias,ListaRobos).
 
-/*sanCayetano/1 Se considera "San Cayetano" a​ ​ quien a todos los que tiene cerca les da algún encargo (y tiene al menos a alguien cerca)
-Alguien tiene cerca a otro personaje si son amigos o uno trabaja para el otro*/
-
+%2) San Cayetano
 sonAmigos(Persona,OtraPersona):-
 	amigo(Persona,OtraPersona).
 sonAmigos(Persona,OtraPersona):-
@@ -100,3 +97,49 @@ estanCerca(Persona,OtraPersona):-
 sanCayetano(Personaje):-
 	estanCerca(Personaje,_),
 	forall(estanCerca(Personaje,Alguien),encargo(Personaje,Alguien,_)).
+
+%3) Nivel de Respeto
+nivelRespeto(Personaje,Nivel):-	
+	personaje(Personaje,Ocupacion),
+	nivelSegunOcupacion(Ocupacion,Nivel).
+nivelRespeto(vincent,15).
+
+nivelSegunOcupacion(mafioso(resuelveProblemas),10).
+nivelSegunOcupacion(mafioso(capo),20).
+nivelSegunOcupacion(actriz(ListaPeliculas),Nivel):-
+	length(ListaPeliculas,Cantidad),
+	Nivel is Cantidad/10.
+
+%4) Personajes respetables
+esRespetable(Personaje):-
+	nivelRespeto(Personaje,Nivel),
+	Nivel>9.
+
+respetabilidad(Respetables , NoRespetables):-
+	cantidadRespetables(Respetables),
+	cantidadNoRespetables(NoRespetables).
+
+cantidadRespetables(Respetables):-
+	findall(Personaje,esRespetable(Personaje),PersonajesRespetables),
+	length(PersonajesRespetables,Respetables).
+
+cantidadNoRespetables(NoRespetables):-
+	findall(Personaje,(personaje(Personaje,_),not(esRespetable(Personaje))),PersonajesNoRespetables),
+	length(PersonajesNoRespetables,NoRespetables).
+
+%5) Más atareado
+cantidadEncargos(Personaje,CantidadEncargos):-
+	encargo(_,Personaje,_),
+	findall(Encargo,encargo(_,Personaje,Encargo),ListaEncargos),
+	length(ListaEncargos,CantidadEncargos).
+
+esMasAtareadoQue(Personaje,OtroPersonaje):-
+	cantidadEncargos(Personaje,CantidadPersonaje),
+	cantidadEncargos(OtroPersonaje,CantidadOtroPersonaje),
+	CantidadPersonaje>CantidadOtroPersonaje,
+	Personaje\=OtroPersonaje.
+
+masAtareado(Personaje):- %es el mas atareado si para todos los personajes él es el que tiene mas encargos
+	encargo(_,Personaje,_),
+	forall((encargo(_,OtroPersonaje,_),Personaje\=OtroPersonaje),esMasAtareadoQue(Personaje,OtroPersonaje)).
+	%muestra resultados repetidos
