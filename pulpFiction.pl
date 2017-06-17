@@ -26,6 +26,17 @@ esFiel(Persona):-
 	length(ListaDeParejas,CantidadParejas),
 	CantidadParejas=1.
 
+
+%4
+esInfiel(Persona):- saleCon(Persona,OtraPersona),
+				  saleCon(Persona,Amante),
+				  OtraPersona \= Amante.  
+
+ esFiel(Persona):- saleCon(Persona,_),not(esInfiel(Persona)).
+
+
+
+
 %acataOrden/2 Alguien acata la orden de otra persona si trabaja para esa persona directa o indirectamente
 acataOrden(Superior,Empleado):-
 	trabajaPara(Superior,Empleado).
