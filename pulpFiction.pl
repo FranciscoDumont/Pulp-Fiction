@@ -66,7 +66,7 @@ amigo(jules, jimmie).
 amigo(vincent, elVendedor).
 
 
-
+%3) Nivel de Respeto
 nivelRespeto(Personaje,Nivel):-	
 	personaje(Personaje,Ocupacion),
 	nivelSegunOcupacion(Ocupacion,Nivel).
@@ -78,17 +78,24 @@ nivelSegunOcupacion(actriz(ListaPeliculas),Nivel):-
 	length(ListaPeliculas,Cantidad),
 	Nivel is Cantidad/10.
 
+%4) Personajes respetables
+esRespetable(Personaje):-
+	nivelRespeto(Personaje,Nivel),
+	Nivel>9.
+
+respetabilidad(Respetables , NoRespetables):-
+	cantidadRespetables(Respetables),
+	cantidadNoRespetables(NoRespetables).
+
+cantidadRespetables(Respetables):-
+	findall(Personaje,esRespetable(Personaje),PersonajesRespetables),
+	length(PersonajesRespetables,Respetables).
+
+cantidadNoRespetables(NoRespetables):-
+	findall(Personaje,(personaje(Personaje,_),not(esRespetable(Personaje))),PersonajesNoRespetables),
+	length(PersonajesNoRespetables,NoRespetables).
 
 /*
-respetable(Personaje,Nivel):- nivelRespeto(Personaje,Nivel),Nivel>9.
-
-
-respetabilidad(Respetables , NoRespetables):-findall(Personaje,respetable(Personaje,Nivel),PersonajesRespetables),
-					length(PersonajesRespetables,Respetanles),
-					findall(Personaje,not(respetable(Personaje,Nivel)),PersonajesNoRespetables),
-					length(PersonajesNoRespetables,NoRespetables).
-
-
 cantidadEncargos(Personaje,Cantidad):-findall(Personaje,encargo(Personaje,_,_),CantidadEncargos),length(CantidadEncargos,Cantidad).
 masAtareado(Personaje):- forall	(personje(Personaje,_),			
 
