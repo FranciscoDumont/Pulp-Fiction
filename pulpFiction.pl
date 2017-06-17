@@ -95,9 +95,19 @@ cantidadNoRespetables(NoRespetables):-
 	findall(Personaje,(personaje(Personaje,_),not(esRespetable(Personaje))),PersonajesNoRespetables),
 	length(PersonajesNoRespetables,NoRespetables).
 
-/*
-cantidadEncargos(Personaje,Cantidad):-findall(Personaje,encargo(Personaje,_,_),CantidadEncargos),length(CantidadEncargos,Cantidad).
-masAtareado(Personaje):- forall	(personje(Personaje,_),			
+%5) Más atareado
+cantidadEncargos(Personaje,CantidadEncargos):-
+	encargo(_,Personaje,_),
+	findall(Encargo,encargo(_,Personaje,Encargo),ListaEncargos),
+	length(ListaEncargos,CantidadEncargos).
 
+esMasAtareadoQue(Personaje,OtroPersonaje):-
+	cantidadEncargos(Personaje,CantidadPersonaje),
+	cantidadEncargos(OtroPersonaje,CantidadOtroPersonaje),
+	CantidadPersonaje>CantidadOtroPersonaje,
+	Personaje\=OtroPersonaje.
 
-*/
+masAtareado(Personaje):- %es el mas atareado si para todos los personajes él es el que tiene mas encargos
+	encargo(_,Personaje,_),
+	forall((encargo(_,OtroPersonaje,_),Personaje\=OtroPersonaje),esMasAtareadoQue(Personaje,OtroPersonaje)).
+	%muestra resultados repetidos
