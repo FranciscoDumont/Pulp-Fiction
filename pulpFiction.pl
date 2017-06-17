@@ -48,7 +48,7 @@ personaje(bianca,     actriz([elPadrino1])).
 personaje(elVendedor, vender([humo, iphone])).
 personaje(jimmie,     vender([auto])).
  
-También tenemos información de los encargos que le hacen los jefes a sus empleados, codificada en la base de la siguiente forma: 
+%También tenemos información de los encargos que le hacen los jefes a sus empleados, codificada en la base de la siguiente forma: 
 % encargo(Solicitante, Encargado, Tarea). 
 % las tareas pueden ser cuidar(Protegido), ayudar(Ayudado), buscar(Buscado, Lugar)
 encargo(marsellus, vincent,   cuidar(mia)).
@@ -60,21 +60,26 @@ encargo(bernardo, vincent, buscar(jules, fuerteApache)).
 encargo(bernardo, winston, buscar(jules, sanMartin)).
 encargo(bernardo, winston, buscar(jules, lugano)).
  
-Por último contamos con la información de quién es amigo de quién:
+%Por último contamos con la información de quién es amigo de quién:
 amigo(vincent, jules).
 amigo(jules, jimmie).
 amigo(vincent, elVendedor).
 
 
 
-nivelRespeto(Personaje,Nivel):-personaje(Personaje,Ocupacion),cantidadNivel(Ocupacion,Nivel).
-cantidadNivel(mafioso(resuelveProblemas),10).
-cantidadNivel(mafioso(capo),20).
-nivelRespeto(Personaje,Nivel):-personaje(Personaje,actriz(ListaPeliculas)),legnth(ListaPeliculas,Cantidad),Cantidad/10 is Nivel.
-nivelRespeto(_,0).
+nivelRespeto(Personaje,Nivel):-	
+	personaje(Personaje,Ocupacion),
+	nivelSegunOcupacion(Ocupacion,Nivel).
+nivelRespeto(vincent,15).
+
+nivelSegunOcupacion(mafioso(resuelveProblemas),10).
+nivelSegunOcupacion(mafioso(capo),20).
+nivelSegunOcupacion(actriz(ListaPeliculas),Nivel):-
+	length(ListaPeliculas,Cantidad),
+	Nivel is Cantidad/10.
 
 
-
+/*
 respetable(Personaje,Nivel):- nivelRespeto(Personaje,Nivel),Nivel>9.
 
 
@@ -88,3 +93,4 @@ cantidadEncargos(Personaje,Cantidad):-findall(Personaje,encargo(Personaje,_,_),C
 masAtareado(Personaje):- forall	(personje(Personaje,_),			
 
 
+*/
