@@ -19,7 +19,7 @@ saleCon(Persona,OtraPersona):-
 saleCon(Persona,OtraPersona):-
 	pareja(OtraPersona,Persona).
 
-% ​esFiel/1 Una persona es fiel cuando sale con una única persona.
+% esFiel/1 Una persona es fiel cuando sale con una única persona.
 esFiel(Persona):-
 	pareja(Persona,_),
 	findall(OtraPersona,saleCon(Persona,OtraPersona),ListaDeParejas),
@@ -32,9 +32,10 @@ acataOrden(Superior,Empleado):-
 acataOrden(Superior,Empleado):-
 	trabajaPara(Empleador,Empleado),
 	acataOrden(Superior,Empleador).
-	
-	
-	
+
+%Entrega 2
+
+% personaje(Nombre, Ocupacion)
 personaje(pumkin,     ladron([estacionesDeServicio, licorerias])).
 personaje(honeyBunny, ladron([licorerias, estacionesDeServicio])).
 personaje(vincent,    mafioso(maton)).
@@ -47,8 +48,7 @@ personaje(bernardo,   mafioso(cerebro)).
 personaje(bianca,     actriz([elPadrino1])).
 personaje(elVendedor, vender([humo, iphone])).
 personaje(jimmie,     vender([auto])).
- 
-%También tenemos información de los encargos que le hacen los jefes a sus empleados, codificada en la base de la siguiente forma: 
+
 % encargo(Solicitante, Encargado, Tarea). 
 % las tareas pueden ser cuidar(Protegido), ayudar(Ayudado), buscar(Buscado, Lugar)
 encargo(marsellus, vincent,   cuidar(mia)).
@@ -65,6 +65,38 @@ amigo(vincent, jules).
 amigo(jules, jimmie).
 amigo(vincent, elVendedor).
 
+%1) Personajes peligrosos
+esPeligroso(Personaje):-
+	haceActividadPeligrosa(Personaje).
+esPeligroso(Personaje):-
+	trabajaPara(Jefe,Personaje),
+	esPeligroso(Jefe).
+
+haceActividadPeligrosa(Personaje):-
+	personaje(Personaje,mafioso(maton)).
+haceActividadPeligrosa(Personaje):-
+	personaje(Personaje,ladron(ListaRobos)),
+	member(licorerias,ListaRobos).
+
+%2) San Cayetano
+sonAmigos(Persona,OtraPersona):-
+	amigo(Persona,OtraPersona).
+sonAmigos(Persona,OtraPersona):-
+	amigo(OtraPersona,Persona).
+
+trabajanJuntos(Persona,OtraPersona):-
+	trabajaPara(Persona,OtraPersona).
+trabajanJuntos(Persona,OtraPersona):-
+	trabajaPara(OtraPersona,Persona).
+
+estanCerca(Persona,OtraPersona):-
+	sonAmigos(Persona,OtraPersona).
+estanCerca(Persona,OtraPersona):-
+	trabajanJuntos(Persona,OtraPersona).
+
+sanCayetano(Personaje):-
+	estanCerca(Personaje,_),
+	forall(estanCerca(Personaje,Alguien),encargo(Personaje,Alguien,_)).
 
 %3) Nivel de Respeto
 nivelRespeto(Personaje,Nivel):-	
