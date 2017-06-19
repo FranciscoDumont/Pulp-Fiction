@@ -26,17 +26,6 @@ esFiel(Persona):-
 	length(ListaDeParejas,CantidadParejas),
 	CantidadParejas=1.
 
-
-%4
-esInfiel(Persona):- saleCon(Persona,OtraPersona),
-				  saleCon(Persona,Amante),
-				  OtraPersona \= Amante.  
-
- esFiel(Persona):- saleCon(Persona,_),not(esInfiel(Persona)).
-
-
-
-
 %acataOrden/2 Alguien acata la orden de otra persona si trabaja para esa persona directa o indirectamente
 acataOrden(Superior,Empleado):-
 	trabajaPara(Superior,Empleado).
@@ -139,6 +128,25 @@ cantidadNoRespetables(NoRespetables):-
 	length(PersonajesNoRespetables,NoRespetables).
 
 %5) Más atareado
+%cantidadEncargos(Personaje,CantidadEncargos):-
+	%encargo(_,Personaje,_),
+	%personaje(Personaje, _),
+	%findall(Encargo,encargo(_,Personaje,Encargo),ListaEncargos),
+	%length(ListaEncargos,CantidadEncargos).
+
+%esMasAtareadoQue(Personaje,OtroPersonaje):-
+/*
+	cantidadEncargos(Personaje,CantidadPersonaje),
+	cantidadEncargos(OtroPersonaje,CantidadOtroPersonaje),
+	CantidadPersonaje>=CantidadOtroPersonaje.
+	%Personaje\=OtroPersonaje.
+
+masAtareado(Personaje):- %es el mas atareado si para todos los personajes él es el que tiene mas encargos
+	personaje(Personaje,_),
+	forall(personaje(OtroPersonaje,_),esMasAtareadoQue(Personaje,OtroPersonaje)).
+	%muestra resultados repetidos
+
+	*/
 cantidadEncargos(Personaje,CantidadEncargos):-
 	encargo(_,Personaje,_),
 	findall(Encargo,encargo(_,Personaje,Encargo),ListaEncargos),
@@ -147,10 +155,9 @@ cantidadEncargos(Personaje,CantidadEncargos):-
 esMasAtareadoQue(Personaje,OtroPersonaje):-
 	cantidadEncargos(Personaje,CantidadPersonaje),
 	cantidadEncargos(OtroPersonaje,CantidadOtroPersonaje),
-	CantidadPersonaje>CantidadOtroPersonaje,
-	Personaje\=OtroPersonaje.
+	CantidadPersonaje>=CantidadOtroPersonaje.
+	%Personaje\=OtroPersonaje.
 
 masAtareado(Personaje):- %es el mas atareado si para todos los personajes él es el que tiene mas encargos
 	encargo(_,Personaje,_),
-	forall((encargo(_,OtroPersonaje,_),Personaje\=OtroPersonaje),esMasAtareadoQue(Personaje,OtroPersonaje)).
-	%muestra resultados repetidos
+	forall(encargo(_,OtroPersonaje,_),esMasAtareadoQue(Personaje,OtroPersonaje)).
