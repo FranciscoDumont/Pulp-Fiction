@@ -20,11 +20,12 @@ saleCon(Persona,OtraPersona):-
 	pareja(OtraPersona,Persona).
 
 % esFiel/1 Una persona es fiel cuando sale con una única persona.
-esFiel(Persona):-
-	pareja(Persona,_),
-	findall(OtraPersona,saleCon(Persona,OtraPersona),ListaDeParejas),
-	length(ListaDeParejas,CantidadParejas),
-	CantidadParejas=1.
+esInfiel(Persona):- 
+	saleCon(Persona,OtraPersona),
+	saleCon(Persona,Amante),
+	OtraPersona \= Amante.  
+
+esFiel(Persona):- saleCon(Persona,_),not(esInfiel(Persona)).
 
 %acataOrden/2 Alguien acata la orden de otra persona si trabaja para esa persona directa o indirectamente
 acataOrden(Superior,Empleado):-
@@ -127,15 +128,15 @@ cantidadNoRespetables(NoRespetables):-
 	findall(Personaje,(personaje(Personaje,_),not(esRespetable(Personaje))),PersonajesNoRespetables),
 	length(PersonajesNoRespetables,NoRespetables).
 
-%5) Más atareado
-%cantidadEncargos(Personaje,CantidadEncargos):-
-	%encargo(_,Personaje,_),
-	%personaje(Personaje, _),
-	%findall(Encargo,encargo(_,Personaje,Encargo),ListaEncargos),
-	%length(ListaEncargos,CantidadEncargos).
-
-%esMasAtareadoQue(Personaje,OtroPersonaje):-
 /*
+5) Más atareado
+cantidadEncargos(Personaje,CantidadEncargos):-
+	encargo(_,Personaje,_),
+	personaje(Personaje, _),
+	findall(Encargo,encargo(_,Personaje,Encargo),ListaEncargos),
+	length(ListaEncargos,CantidadEncargos).
+
+esMasAtareadoQue(Personaje,OtroPersonaje):-
 	cantidadEncargos(Personaje,CantidadPersonaje),
 	cantidadEncargos(OtroPersonaje,CantidadOtroPersonaje),
 	CantidadPersonaje>=CantidadOtroPersonaje.
@@ -145,8 +146,9 @@ masAtareado(Personaje):- %es el mas atareado si para todos los personajes él es
 	personaje(Personaje,_),
 	forall(personaje(OtroPersonaje,_),esMasAtareadoQue(Personaje,OtroPersonaje)).
 	%muestra resultados repetidos
+*/
 
-	*/
+%5) Más atareado
 cantidadEncargos(Personaje,CantidadEncargos):-
 	encargo(_,Personaje,_),
 	findall(Encargo,encargo(_,Personaje,Encargo),ListaEncargos),
