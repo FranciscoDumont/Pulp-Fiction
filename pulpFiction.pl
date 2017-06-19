@@ -68,15 +68,14 @@ amigo(vincent, elVendedor).
 
 %1) Personajes peligrosos
 esPeligroso(Personaje):-
-	haceActividadPeligrosa(Personaje).
+	personaje(Personaje, Actividad),
+	esActividadPeligrosa(Actividad).
 esPeligroso(Personaje):-
 	trabajaPara(Jefe,Personaje),
 	esPeligroso(Jefe).
 
-haceActividadPeligrosa(Personaje):-
-	personaje(Personaje,mafioso(maton)).
-haceActividadPeligrosa(Personaje):-
-	personaje(Personaje,ladron(ListaRobos)),
+esActividadPeligrosa(mafioso(maton)).
+esActividadPeligrosa(ladron(ListaRobos)):-
 	member(licorerias,ListaRobos).
 
 %2) San Cayetano
